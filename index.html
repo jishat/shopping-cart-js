@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+   <title>Shopping Cart</title>
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" rel="stylesheet" />
+   <link href="style.css" rel="stylesheet">
+</head>
+
+<body>
+
+   <section>
+      <div class="container">
+         <div class="cart">
+            <div class="col-md-12 col-lg-10 mx-auto">
+               <div class="cart-item">
+                  <div class="row">
+                     <div class="col-md-7 center-item">
+                        <img src="images/product-1.png" alt="">
+                        <h5>iPhone 11 128GB Black</h5>
+                     </div>
+
+                     <div class="col-md-5 center-item eachProduct">
+                        <div class="input-group number-spinner quantityInfo">
+                           <button class="btn btn-default decrease"><i class="fas fa-minus"></i></button>
+                           <input type="number" min="1" class="form-control value text-center" value="1">
+                           <button class="btn btn-default increase"><i class="fas fa-plus"></i></button>
+                        </div>
+                        <h5 class="productCost">$15</h5>
+                        <img src="images/remove.png" alt="" class="remove-item">
+                     </div>
+                  </div>
+               </div>
+
+               <div class="cart-item">
+                  <div class="row">
+                     <div class="col-md-7 center-item mx-auto">
+                        <img src="images/product-2.png" alt="">
+                        <h5>iPhone 11 Silicone Case - Black</h5>
+                     </div>
+                     <div class="col-md-5 center-item eachProduct">
+                        <div class="input-group number-spinner quantityInfo">
+                           <button class="btn btn-default decrease"><i class="fas fa-minus"></i></button>
+                           <input type="number" min="1" class="form-control text-center value" value="1">
+                           <button class="btn btn-default increase"><i class="fas fa-plus"></i></button>
+
+                        </div>
+                        <h5 class="productCost">$10</h5>
+                        <img src="images/remove.png" alt="" class="remove-item">
+                     </div>
+                  </div>
+               </div>
+
+               <div class="cart-item">
+                  <div class="row">
+                     <div class="col-md-7 center-item mx-auto">
+                        <img src="images/product-2.png" alt="">
+                        <h5>iPhone 11 Silicone Case - Black</h5>
+                     </div>
+                     <div class="col-md-5 center-item eachProduct">
+                        <div class="input-group number-spinner quantityInfo">
+                           <button class="btn btn-default decrease"><i class="fas fa-minus"></i></button>
+                           <input type="number" min="1" class="form-control text-center value" value="1">
+                           <button class="btn btn-default increase"><i class="fas fa-plus"></i></button>
+
+                        </div>
+                        <h5 class="productCost">$20</h5>
+                        <img src="images/remove.png" alt="" class="remove-item">
+                     </div>
+                  </div>
+               </div>
+
+               <div class="cart-item">
+                  <div class="row">
+
+                     <div class="col-md-8">
+                        <h5>Subtotal: </h5>
+                        <h5>Tax:</h5>
+                        <h5>Total:</h5>
+                     </div>
+
+                     <div class="col-md-4 status">
+                        <h5 id="subTotal">$0</h5>
+                        <h5 id="tax">$5</h5>
+                        <h5 id="total">$0</h5>
+                     </div>
+                  </div>
+               </div>
+               <div class="col-md-12 pt-4 pb-4">
+                  <button type="button" class="btn btn-success check-out">Check Out</button>
+               </div>
+            </div>
+         </div>
+      </div>
+   </section>
+
+   <script>
+      // Calculation subtotal / total
+      function calculateSubtotal(){
+         let totalSubTotal = 0;
+         let productCost = document.getElementsByClassName("productCost");
+         
+
+         for (var i = 0; i < productCost.length; i++) {
+            let getProductCost = parseInt(productCost[i].innerText.replace('$', ''));
+            totalSubTotal += getProductCost;
+         }
+         let subTotal = document.getElementById("subTotal");
+         let tax = document.getElementById("tax");
+         let totalTax = parseInt(tax.innerText.replace('$', ''));
+
+         let total = document.getElementById("total");
+
+         subTotal.innerText='$'+totalSubTotal;
+         total.innerText='$'+(totalSubTotal + totalTax);
+
+      }
+      calculateSubtotal(); 
+
+      // action if increase product quantity
+      let increase = document.getElementsByClassName("increase");
+      for (var i = 0; i < increase.length; i++) {
+         increase[i].addEventListener('click', function(e){
+            let selectInput = this.previousElementSibling;
+            let getOldValue = selectInput.value;
+            let totalInputValue = parseInt(getOldValue)+1;
+            selectInput.value = totalInputValue;
+            let getCost = selectInput.parentNode.nextElementSibling;
+            let cost = parseInt(getCost.innerText.replace('$', '')) / (totalInputValue - 1);
+            getCost.innerText = '$'+cost * totalInputValue;
+
+            calculateSubtotal();
+         }, false);
+      }
+
+      // action if decrease product quantity
+      var decrease = document.getElementsByClassName("decrease");
+      for (var i = 0; i < decrease.length; i++) {
+         
+         decrease[i].addEventListener('click', function(e){
+            let selectInput = this.nextElementSibling;
+            let getOldValue = selectInput.value;
+            if(selectInput.value != 1 && selectInput.value > 1){
+               let totalInputValue = parseInt(getOldValue) - 1
+               selectInput.value = totalInputValue;
+
+               let getCost = selectInput.parentNode.nextElementSibling;
+               let cost = parseInt(getCost.innerText.replace('$', '')) / (totalInputValue + 1);
+               getCost.innerText = '$'+cost * totalInputValue;
+               calculateSubtotal();
+            }
+         }, false);
+      }
+
+      // if user input product quanity manually
+      var allValue = document.getElementsByClassName("value");
+      for (let i = 0; i < allValue.length; i++) {
+         let getCost = allValue[i].parentNode.nextElementSibling;
+         const storeCost = parseInt(getCost.innerText.replace('$', ''));
+         allValue[i].addEventListener('change', function(e){
+            let eachValue = parseInt(this.value);
+            if(eachValue != 0 && eachValue > 0){
+               let cost =  storeCost * eachValue;
+               getCost.innerText = '$'+cost;
+               calculateSubtotal();
+            }
+         }, false);
+      }
+
+      // remove Item
+      let removeItem = document.getElementsByClassName("remove-item");
+      for (var i = 0; i < removeItem.length; i++) {
+         removeItem[i].addEventListener('click', function(e){
+            let thisClass = this.closest('.cart-item');
+            thisClass.style.opacity = '0';
+            setTimeout(function(){ 
+               thisClass.remove();
+               calculateSubtotal();
+             }, 1000);
+            
+            
+         }, false);
+      }
+   </script>
+</body>
+
+</html>
